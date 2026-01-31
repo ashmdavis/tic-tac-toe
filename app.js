@@ -16,8 +16,6 @@ const Gameboard = (function () {
     return { board, displayGameBoard };
 })();
 
-
-
 // players store in object
 const createPlayer = (name, mark) => {
     let score = 0;
@@ -42,8 +40,8 @@ const GameController = (function () {
 
     const startGame = () => {
         players = [
-            createPlayer("Ash", "X"),
-            createPlayer("Davis", "O")
+            createPlayer(document.querySelector("#player-one").value, "X"),
+            createPlayer(document.querySelector("#player-two").value, "O")
         ]
         activePlayer = players[0];
         gameOver = false;
@@ -71,5 +69,6 @@ const GameController = (function () {
     return { startGame, handleClick };
 })();
 
-GameController.startGame();
-
+document.querySelector("#start-button").addEventListener("click", () => {
+    GameController.startGame();
+});
