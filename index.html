@@ -13,8 +13,8 @@
         <h1>Tic Tac Toe!</h1>
     </header>
 
-    <div class="board-wrapper">
-        <div class="game-board">
+    <div id="board-wrapper" class="hidden">
+        <div id="game-board">
             <div class="cell" data-index="0"></div>
             <div class="cell" data-index="1"></div>
             <div class="cell" data-index="2"></div>
@@ -25,12 +25,36 @@
             <div class="cell" data-index="7"></div>
             <div class="cell" data-index="8"></div>
         </div>
+
+        <div id="scoreboard-wrapper">
+            <div id="player-one-wrapper">
+                <p id="p1-name"></p>
+                <p id="p1-score"></p>
+            </div>
+            <div id="tie-wrapper">
+                <p id="draw">Draw</p>
+                <p id="draw-score"></p>
+            </div>
+            <div id="player-two-wrapper">
+                <p id="p2-name"></p>
+                <p id="p2-score"></p>
+            </div>
+        </div>
+
     </div>
 
-    <div class="input-wrapper">
+    <div id="start-wrapper">
         <input type="text" id="player-one" placeholder="Player One">
         <input type="text" id="player-two" placeholder="Player Two">
         <button id="start-button">Start Game</button>
+    </div>
+
+    <div class="modal-wrapper hidden">
+        <div id="next-round-modal" class="next-round-modal">
+            <p id="modal-message"><p>
+                <button id="next-round-button">Next Round</button>
+                <button id="quit-button">Quit</button>
+        </div>
     </div>
 
 

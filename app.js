@@ -18,12 +18,22 @@ const Gameboard = (function () {
         cells.forEach(cell => {
             const index = parseInt(cell.dataset.index);
             cell.textContent = board[index];
-
-            cell.addEventListener("click", GameController.handleClick);
         });
     }
 
-    return { board, displayGameBoard, winningCombos };
+    const resetBoard = () => {
+        board = ["", "", "", "", "", "", "", "", ""];
+        displayGameBoard();
+    };
+
+    const addClickListener = () => {
+        cells.forEach(cell => {
+            cell.removeEventListener("click", GameController.handleClick);
+            cell.addEventListener("click", GameController.handleClick);
+        });
+    };
+
+    return { get board() { return board; }, displayGameBoard, resetBoard, addClickListener, winningCombos };
 })();
 
 // players store in object
@@ -38,20 +48,28 @@ const createPlayer = (name, mark) => {
 const GameController = (function () {
     board = Gameboard.board;
     let players = [];
+    let drawScore = 0
     let activePlayer;
     let gameOver;
 
-    const startGame = () => {
+    const initGame = () => {
         players = [
-            createPlayer(document.querySelector("#player-one").value, "\u2715"),
-            createPlayer(document.querySelector("#player-two").value, "\u25EF")
-        ]
+            createPlayer(scoreBoardDisplay.playerOneInput.value, "\u2715"),
+            createPlayer(scoreBoardDisplay.playerTwoInput.value, "\u25EF")
+        ];
+        Gameboard.addClickListener();
+        startNewRound();
+    };
+
+    const startNewRound = () => {
         activePlayer = players[0];
         gameOver = false;
-        Gameboard.displayGameBoard();
+        Gameboard.resetBoard();
+        scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
     }
 
     const handleClick = (event) => {
+        const board = Gameboard.board;
         let index = event.target.dataset.index;
 
         // cells will not be overwritten
@@ -63,20 +81,22 @@ const GameController = (function () {
 
         if (checkWinner(board)) {
             gameOver = true;
+            activePlayer.addScore();
 
-            setTimeout(() => {
-                alert(`${activePlayer.name} wins!`)
-            }, 50);
+            const winnerName = activePlayer.name;
+            scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
+
+            handleButtons.showNextRound(`${winnerName} wins this round! Do you want to play again?`)
 
             return;
         }
         // checks if all cells are filled and checkWinner return false
         if (board.every(cell => cell !== "")) {
             gameOver = true;
+            drawScore++;
+            scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
-            setTimeout(() => {
-                alert("Its a draw!");
-            }, 50);
+            handleButtons.showNextRound("Its a draw! Do you want to play again?");
 
             return;
         }
@@ -89,7 +109,6 @@ const GameController = (function () {
     };
 
     const checkWinner = (board) => {
-        let winner;
         // checks all the possible winning combinations
         for (const combo of Gameboard.winningCombos) {
             const [a, b, c] = combo;
@@ -101,9 +120,59 @@ const GameController = (function () {
         return false; // no winner found
     }
 
-    return { startGame, handleClick };
+    return { initGame, startNewRound, handleClick };
 })();
 
-document.querySelector("#start-button").addEventListener("click", () => {
-    GameController.startGame();
-});
+const scoreBoardDisplay = (function () {
+    let playerOneInput = document.querySelector("#player-one");
+    let playerTwoInput = document.querySelector("#player-two");
+
+    let playerOneDisplayName = document.querySelector("#p1-name");
+    let playerTwoDisplayName = document.querySelector("#p2-name");
+
+    let playerOneScore = document.querySelector("#p1-score");
+    let playerTwoScore = document.querySelector("#p2-score");
+    let drawScore = document.querySelector("#draw-score");
+
+    const updateScore = (p1Score, p2Score, draw) => {
+        playerOneScore.textContent = p1Score;
+        playerTwoScore.textContent = p2Score;
+        drawScore.textContent = draw;
+    };
+
+    return { playerOneInput, playerTwoInput, playerOneDisplayName, playerTwoDisplayName, updateScore }
+})();
+
+const handleButtons = (function () {
+    const gameWindow = document.querySelector("#board-wrapper");
+    const startWindow = document.querySelector("#start-wrapper");
+    const nextRoundModal = document.querySelector(".modal-wrapper");
+    const modalMessage = document.querySelector("#modal-message");
+    const nextRoundButton = document.querySelector("#next-round-button");
+
+    const startButton = () => {
+        document.querySelector("#start-button").addEventListener("click", () => {
+            GameController.initGame();
+
+            // display user input name into the scoreboard display if name was provided
+            scoreBoardDisplay.playerOneDisplayName.textContent = scoreBoardDisplay.playerOneInput.value || "Player One";
+            scoreBoardDisplay.playerTwoDisplayName.textContent = scoreBoardDisplay.playerTwoInput.value || "Player Two";
+
+            startWindow.classList.add("hidden");
+            gameWindow.classList.remove("hidden");
+        });
+    }
+
+    const showNextRound = (message) => {
+        modalMessage.textContent = message;
+        nextRoundModal.classList.remove("hidden");
+    };
+    nextRoundButton.addEventListener("click", () => {
+        nextRoundModal.classList.add("hidden");
+        GameController.startNewRound();
+    });
+
+    return { startButton, showNextRound };
+})();
+
+handleButtons.startButton();
