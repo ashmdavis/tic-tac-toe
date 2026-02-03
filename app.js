@@ -28,8 +28,18 @@ const Gameboard = (function () {
         });
     }
 
+    const hilightWinningCells = (combo) => {
+        const cells = document.querySelectorAll(".cell");
+
+        combo.forEach(index => {
+            const cell = cells[index];
+            cell.classList.add("winner");
+        });
+    };
+
     const resetBoard = () => {
         board = ["", "", "", "", "", "", "", "", ""];
+        cells.forEach(cell => cell.classList.remove("winner"));
         displayGameBoard();
     };
 
@@ -40,7 +50,7 @@ const Gameboard = (function () {
         });
     };
 
-    return { get board() { return board; }, displayGameBoard, resetBoard, addClickListener, winningCombos };
+    return { get board() { return board; }, displayGameBoard, resetBoard, addClickListener, hilightWinningCells, winningCombos };
 })();
 
 // players store in object
@@ -86,9 +96,13 @@ const GameController = (function () {
         // update the display
         Gameboard.displayGameBoard();
 
-        if (checkWinner(board)) {
+        const winningCombo = checkWinner(board);
+
+        if (winningCombo) {
             gameOver = true;
             activePlayer.addScore();
+
+            Gameboard.hilightWinningCells(winningCombo);
 
             const winnerName = activePlayer.name.toUpperCase();
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
@@ -121,10 +135,10 @@ const GameController = (function () {
             const [a, b, c] = combo;
             // checks if the cells are non-empty and have the same player mark
             if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                return true; // winner found
+                return combo; // winner found
             };
         }
-        return false; // no winner found
+        return null; // no winner found
     }
 
     return { initGame, startNewRound, handleClick };

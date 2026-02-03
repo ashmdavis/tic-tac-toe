@@ -95,6 +95,16 @@ h1 {
     color: var(--player-two);
 }
 
+.cell.x.winner {
+    background-color: var(--player-one);
+    color: var(--primary-color-two);
+}
+
+.cell.o.winner {
+    background-color: var(--player-two);
+    color: var(--primary-color-two);
+}
+
 .cell:hover {
     background-color: color-mix(in srgb, var(--primary-color-two), black 10%);
 }
