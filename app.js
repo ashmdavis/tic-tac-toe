@@ -17,7 +17,14 @@ const Gameboard = (function () {
         // each array item is displayed in each cell based on respective index data 
         cells.forEach(cell => {
             const index = parseInt(cell.dataset.index);
-            cell.textContent = board[index];
+            const mark = board[index];
+            cell.textContent = mark;
+
+            cell.classList.remove("x", "o");
+
+            if (mark === "\u2715") cell.classList.add("x");
+            if (mark === "\u25EF") cell.classList.add("o");
+
         });
     }
 
@@ -83,10 +90,10 @@ const GameController = (function () {
             gameOver = true;
             activePlayer.addScore();
 
-            const winnerName = activePlayer.name;
+            const winnerName = activePlayer.name.toUpperCase();
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
-            handleButtons.showNextRound(`${winnerName} wins this round! Do you want to play again?`)
+            handleButtons.showNextRound(`${winnerName} TAKES THE ROUND`);
 
             return;
         }
@@ -96,7 +103,7 @@ const GameController = (function () {
             drawScore++;
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
-            handleButtons.showNextRound("Its a draw! Do you want to play again?");
+            handleButtons.showNextRound("Its a draw!");
 
             return;
         }
@@ -149,6 +156,7 @@ const handleButtons = (function () {
     const nextRoundModal = document.querySelector(".modal-wrapper");
     const modalMessage = document.querySelector("#modal-message");
     const nextRoundButton = document.querySelector("#next-round-button");
+    const quitButton = document.querySelector("#quit-button");
 
     const startButton = () => {
         document.querySelector("#start-button").addEventListener("click", () => {
@@ -167,9 +175,20 @@ const handleButtons = (function () {
         modalMessage.textContent = message;
         nextRoundModal.classList.remove("hidden");
     };
+
+    // play next round
     nextRoundButton.addEventListener("click", () => {
         nextRoundModal.classList.add("hidden");
         GameController.startNewRound();
+    });
+
+    //quit the game
+    quitButton.addEventListener("click", () => {
+        nextRoundModal.classList.add("hidden");
+        gameWindow.classList.add("hidden");
+        startWindow.classList.remove("hidden");
+        Gameboard.resetBoard();
+        location.reload();
     });
 
     return { startButton, showNextRound };
