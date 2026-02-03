@@ -96,6 +96,7 @@ const GameController = (function () {
         // update the display
         Gameboard.displayGameBoard();
 
+        const topMessage = document.querySelector("#top-message");
         const winningCombo = checkWinner(board);
 
         if (winningCombo) {
@@ -108,6 +109,7 @@ const GameController = (function () {
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
             handleButtons.showNextRound(`${winnerName} TAKES THE ROUND`);
+            topMessage.textContent = "You won!"
 
             return;
         }
@@ -118,6 +120,7 @@ const GameController = (function () {
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
             handleButtons.showNextRound("Its a draw!");
+            topMessage.textContent = "Uh Oh!"
 
             return;
         }
