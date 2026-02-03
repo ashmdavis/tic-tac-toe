@@ -119,7 +119,7 @@ const GameController = (function () {
             drawScore++;
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
-            handleButtons.showNextRound("It's a draw!");
+            handleButtons.showNextRound("IT'S A DRAW");
             topMessage.textContent = "Uh Oh!"
 
             return;
