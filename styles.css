@@ -10,7 +10,7 @@
     --main-font: #272727;
     --primary-color: #3b6064;
     --primary-color-two: #49777c;
-    --primary-drop: #1a2a2c;
+    --primary-drop: #2a4547;
     --player-one: #e09f3e;
     --player-one-drop: #976c2b;
     --player-two: #87bba2;
@@ -93,6 +93,15 @@ h1 {
 
 .cell.o {
     color: var(--player-two);
+}
+
+.cell:hover {
+    background-color: color-mix(in srgb, var(--primary-color-two), black 10%);
+}
+
+.cell:active {
+    transform: translateY(7px);
+    filter: none;
 }
 
 #scoreboard-wrapper {
@@ -211,4 +220,29 @@ button#quit-button {
     font-size: 28px;
     color: var(--player-two);
     font-weight: bold;
+}
+
+button,
+.cell {
+    cursor: pointer;
+}
+
+#start-wrapper button:hover,
+button#next-round-button:hover {
+    background-color: color-mix(in srgb, var(--player-one), black 10%);
+}
+
+#start-wrapper button:active,
+button#next-round-button:active {
+    transform: translateY(4px);
+    filter: none;
+}
+
+button#quit-button:hover {
+    background-color: color-mix(in srgb, var(--white), black 10%);
+}
+
+button#quit-button:active {
+    transform: translateY(4px);
+    filter: none;
 }
