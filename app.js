@@ -68,6 +68,7 @@ const GameController = (function () {
     let drawScore = 0
     let activePlayer;
     let gameOver;
+    const turnDisplay = document.querySelector("#turn-display");
 
     const initGame = () => {
         players = [
@@ -83,6 +84,7 @@ const GameController = (function () {
         gameOver = false;
         Gameboard.resetBoard();
         scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
+        turnDisplay.textContent = `${activePlayer.name}'s turn`;
     }
 
     const handleClick = (event) => {
@@ -108,8 +110,12 @@ const GameController = (function () {
             const winnerName = activePlayer.name.toUpperCase();
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
-            handleButtons.showNextRound(`${winnerName} TAKES THE ROUND`);
-            topMessage.textContent = "You won!"
+            setTimeout(() => {
+                handleButtons.showNextRound(`${winnerName} TAKES THE ROUND`);
+                topMessage.textContent = "You won!"
+            }, 500);
+
+            turnDisplay.textContent = "";
 
             return;
         }
@@ -119,13 +125,18 @@ const GameController = (function () {
             drawScore++;
             scoreBoardDisplay.updateScore(players[0].getScore(), players[1].getScore(), drawScore);
 
-            handleButtons.showNextRound("IT'S A DRAW");
-            topMessage.textContent = "Uh Oh!"
+            setTimeout(() => {
+                handleButtons.showNextRound("IT'S A DRAW");
+                topMessage.textContent = "Uh Oh!"
+            }, 500);
+
+            turnDisplay.textContent = "";
 
             return;
         }
 
         swtichPlayerTurn();
+        turnDisplay.textContent = `${activePlayer.name}'s turn`;
     }
 
     const swtichPlayerTurn = () => {
