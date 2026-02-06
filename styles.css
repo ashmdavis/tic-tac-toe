@@ -37,16 +37,14 @@ h1 {
 }
 
 #turn-display {
-    width: 200px;
-    height: 50px;
+    width: 500px;
+    height: 25px;
     border-radius: 10px;
-    background-color: var(--primary-color-two);
-    filter: drop-shadow(0px 4px 0px var(--primary-drop));
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px;
-
+    /* text-align: center; */
+    color: var(--white);
 }
 
 #start-wrapper {
@@ -78,6 +76,8 @@ h1 {
 #board-wrapper {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 520px;
     gap: 20px;
     padding-top: 10px;

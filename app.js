@@ -190,6 +190,11 @@ const handleButtons = (function () {
         document.querySelector("#start-button").addEventListener("click", () => {
             GameController.initGame();
 
+            if (scoreBoardDisplay.playerOneInput.value === "" || scoreBoardDisplay.playerTwoInput.value === "") {
+                alert("Please enter Player One and Player Two name");
+                return;
+            }
+
             // display user input name into the scoreboard display if name was provided
             scoreBoardDisplay.playerOneDisplayName.textContent = scoreBoardDisplay.playerOneInput.value || "Player One";
             scoreBoardDisplay.playerTwoDisplayName.textContent = scoreBoardDisplay.playerTwoInput.value || "Player Two";
